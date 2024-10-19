@@ -82,5 +82,5 @@ else:
         exec(open(r"Traffic_Video.py", encoding="utf-8").read())
     elif st.session_state.page == 'route_optimize_predictor':
         exec(open(r"predictive_analysis_route_analysis.py", encoding="utf-8").read())  # Update with your route map file path
-    elif  st.session_state.page == 'SignalSimulation':
-        exec(open(r"new signal.py", encoding="utf-8").read())  # Update with your RoadBot AI file path  
+    elif  st.session_state.page == 'smart_signal':
+        exec(open(r"SignalSimulation.py", encoding="utf-8").read())  # Update with your RoadBot AI file path  
