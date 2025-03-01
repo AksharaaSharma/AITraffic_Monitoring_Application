@@ -261,7 +261,6 @@ if st.session_state.page != 'home':
     # Hidden button to trigger the action
     if st.button("Home", key="home-button-hidden", help="Return to homepage"):
         st.session_state.page = 'home'
-        st.experimental_rerun()
 
 # Logic to navigate to different Python files
 if st.session_state.page == 'home':
@@ -310,7 +309,6 @@ if st.session_state.page == 'home':
         )
         if st.button("EXPLORE TRAFFIC FEED", key="traffic_btn"):
             st.session_state.page = 'traffic_video'
-            st.experimental_rerun()
     
     with col2:
         st.markdown(
@@ -327,7 +325,6 @@ if st.session_state.page == 'home':
         )
         if st.button("OPTIMIZE ROUTES", key="route_btn"):
             st.session_state.page = 'route_optimize_predictor'
-            st.experimental_rerun()
     
     with col3:
         st.markdown(
@@ -344,7 +341,6 @@ if st.session_state.page == 'home':
         )
         if st.button("RUN SIMULATION", key="signal_btn"):
             st.session_state.page = 'smart_signal'
-            st.experimental_rerun()
     
     # Another road animation
     st.markdown(
