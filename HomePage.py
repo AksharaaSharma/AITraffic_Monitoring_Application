@@ -114,7 +114,7 @@ st.markdown(
     }
     
     /* Button Styles */
-    .custom-button {
+    .stButton > button {
         background: linear-gradient(to right, #1e3c72, #2a5298);
         color: white;
         border: none;
@@ -130,9 +130,10 @@ st.markdown(
         text-transform: uppercase;
         letter-spacing: 1px;
         box-shadow: 0 4px 12px rgba(46, 82, 152, 0.3);
+        height: auto;
     }
     
-    .custom-button:hover {
+    .stButton > button:hover {
         background: linear-gradient(to right, #2a5298, #1e3c72);
         box-shadow: 0 6px 15px rgba(46, 82, 152, 0.4);
         transform: translateY(-2px);
@@ -225,9 +226,16 @@ st.markdown(
     .road-line:nth-child(4) { animation-delay: 1.2s; }
     .road-line:nth-child(5) { animation-delay: 1.6s; }
     
-    /* stButton modifications */
-    .stButton > button {
-        display: none;
+    /* Card container to ensure equal height */
+    .feature-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    
+    /* Fix for button display inside cards */
+    .button-wrapper {
+        margin-top: auto;
     }
     </style>
     """,
@@ -253,6 +261,7 @@ if st.session_state.page != 'home':
     # Hidden button to trigger the action
     if st.button("Home", key="home-button-hidden", help="Return to homepage"):
         st.session_state.page = 'home'
+        st.experimental_rerun()
 
 # Logic to navigate to different Python files
 if st.session_state.page == 'home':
@@ -283,53 +292,59 @@ if st.session_state.page == 'home':
         unsafe_allow_html=True
     )
     
-    # Create horizontal layout with enhanced cards
+    # Create horizontal layout with enhanced cards and WORKING BUTTONS
     col1, col2, col3 = st.columns(3)
     
     with col1:
         st.markdown(
             """
             <div class="feature-card">
-                <div class="feature-icon">🎥</div>
-                <div class="feature-title">Traffic Feed</div>
-                <div class="feature-description">View real-time traffic cameras with AI-powered analytics. Monitor congestion, incidents, and traffic flow across your network.</div>
-                <button class="custom-button" onclick="document.getElementById('traffic_btn').click()">EXPLORE FEED</button>
+                <div class="feature-container">
+                    <div class="feature-icon">🎥</div>
+                    <div class="feature-title">Traffic Feed</div>
+                    <div class="feature-description">View real-time traffic cameras with AI-powered analytics. Monitor congestion, incidents, and traffic flow across your network.</div>
+                </div>
             </div>
             """,
             unsafe_allow_html=True
         )
         if st.button("EXPLORE TRAFFIC FEED", key="traffic_btn"):
             st.session_state.page = 'traffic_video'
+            st.experimental_rerun()
     
     with col2:
         st.markdown(
             """
             <div class="feature-card">
-                <div class="feature-icon">🗺️</div>
-                <div class="feature-title">Route Optimizer</div>
-                <div class="feature-description">Find the fastest routes with AI predictive analysis. Avoid congestion and reduce travel time with real-time traffic insights.</div>
-                <button class="custom-button" onclick="document.getElementById('route_btn').click()">OPTIMIZE ROUTES</button>
+                <div class="feature-container">
+                    <div class="feature-icon">🗺️</div>
+                    <div class="feature-title">Route Optimizer</div>
+                    <div class="feature-description">Find the fastest routes with AI predictive analysis. Avoid congestion and reduce travel time with real-time traffic insights.</div>
+                </div>
             </div>
             """,
             unsafe_allow_html=True
         )
         if st.button("OPTIMIZE ROUTES", key="route_btn"):
             st.session_state.page = 'route_optimize_predictor'
+            st.experimental_rerun()
     
     with col3:
         st.markdown(
             """
             <div class="feature-card">
-                <div class="feature-icon">🚦</div>
-                <div class="feature-title">Signal Simulation</div>
-                <div class="feature-description">Smart traffic signal control and simulation. Test signal timing strategies and optimize traffic flow with our AI-powered system.</div>
-                <button class="custom-button" onclick="document.getElementById('signal_btn').click()">RUN SIMULATION</button>
+                <div class="feature-container">
+                    <div class="feature-icon">🚦</div>
+                    <div class="feature-title">Signal Simulation</div>
+                    <div class="feature-description">Smart traffic signal control and simulation. Test signal timing strategies and optimize traffic flow with our AI-powered system.</div>
+                </div>
             </div>
             """,
             unsafe_allow_html=True
         )
         if st.button("RUN SIMULATION", key="signal_btn"):
             st.session_state.page = 'smart_signal'
+            st.experimental_rerun()
     
     # Another road animation
     st.markdown(
