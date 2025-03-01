@@ -1,6 +1,4 @@
 import streamlit as st
-import base64
-from PIL import Image
 import streamlit.components.v1 as components
 
 # Page configuration
@@ -11,141 +9,230 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Function to add background image with overlay
-def add_bg_from_local(image_file, overlay_color="rgba(0, 0, 0, 0.5)"):
-    with open(image_file, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read())
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: linear-gradient({overlay_color}, {overlay_color}), 
-                              url(data:image/jpg;base64,{encoded_string.decode()});
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }}
-        .stButton > button {{
-            background-color: rgba(0, 120, 212, 0.8);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            width: 100%;
-            height: 80px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        }}
-        .stButton > button:hover {{
-            background-color: rgba(0, 90, 180, 0.9);
-            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
-            transform: translateY(-2px);
-        }}
-        .title-container {{
-            background-color: rgba(255, 255, 255, 0.85);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            animation: fadeIn 1.5s;
-        }}
-        .button-container {{
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: all 0.3s ease;
-            animation: slideUp 0.5s;
-        }}
-        .button-container:hover {{
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
-        }}
-        .button-title {{
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-            text-align: center;
-        }}
-        .button-description {{
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 15px;
-            text-align: center;
-        }}
-        .button-icon {{
-            font-size: 36px;
-            margin-bottom: 10px;
-            text-align: center;
-        }}
-        h1, h2, h3 {{
-            font-family: 'Helvetica Neue', sans-serif;
-        }}
-        @keyframes fadeIn {{
-            from {{ opacity: 0; }}
-            to {{ opacity: 1; }}
-        }}
-        @keyframes slideUp {{
-            from {{ opacity: 0; transform: translateY(20px); }}
-            to {{ opacity: 1; transform: translateY(0); }}
-        }}
-        .home-button {{
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 999;
-        }}
-        .home-button button {{
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #333;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-# Dictionary to hold background images and their properties
-background_images = {
-    'home': {
-        'path': r"1.jpg",
-        'overlay': "rgba(0, 0, 0, 0.4)"
-    },
-    'traffic_video': {
-        'path': r"1.jpg",
-        'overlay': "rgba(0, 0, 0, 0.6)"
-    },
-    'route_optimize_predictor': {
-        'path': r"images.png",
-        'overlay': "rgba(0, 0, 0, 0.5)"
-    },
-    'smart_signal': {
-        'path': r"photo-1520594923568-1b5d82587f86.jpeg",
-        'overlay': "rgba(0, 0, 0, 0.5)"
+# Custom CSS for a visually pleasing traffic-themed interface
+st.markdown(
+    """
+    <style>
+    /* Global Styles */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+    
+    body {
+        font-family: 'Montserrat', sans-serif;
+        color: #333;
     }
-}
+    
+    .stApp {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    }
+    
+    /* Header Styles */
+    .main-header {
+        background: linear-gradient(to right, #1e3c72, #2a5298);
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .main-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M95,50 L85,35 L85,20 L75,20 L75,10 L25,10 L25,20 L15,20 L15,35 L5,50 L15,65 L15,80 L25,80 L25,90 L75,90 L75,80 L85,80 L85,65 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/></svg>');
+        background-repeat: repeat;
+        opacity: 0.15;
+    }
+    
+    .header-title {
+        color: white; 
+        font-size: 42px; 
+        font-weight: 700; 
+        text-align: center; 
+        margin-bottom: 5px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 10;
+    }
+    
+    .header-subtitle {
+        color: rgba(255, 255, 255, 0.9); 
+        font-size: 18px; 
+        text-align: center; 
+        font-weight: 400;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 10;
+    }
+    
+    /* Card Styles */
+    .feature-card {
+        background: white;
+        border-radius: 15px;
+        padding: 28px;
+        height: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+        border-top: 5px solid #2a5298;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    }
+    
+    .feature-icon {
+        font-size: 48px;
+        text-align: center;
+        margin-bottom: 15px;
+        background: linear-gradient(45deg, #1e3c72, #4286f4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1;
+    }
+    
+    .feature-title {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #1e3c72;
+        text-align: center;
+    }
+    
+    .feature-description {
+        font-size: 15px;
+        color: #666;
+        margin-bottom: 20px;
+        text-align: center;
+        line-height: 1.5;
+    }
+    
+    /* Button Styles */
+    .custom-button {
+        background: linear-gradient(to right, #1e3c72, #2a5298);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 14px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        margin-top: auto;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 12px rgba(46, 82, 152, 0.3);
+    }
+    
+    .custom-button:hover {
+        background: linear-gradient(to right, #2a5298, #1e3c72);
+        box-shadow: 0 6px 15px rgba(46, 82, 152, 0.4);
+        transform: translateY(-2px);
+    }
+    
+    /* Traffic theme elements */
+    .traffic-line {
+        height: 3px;
+        background: repeating-linear-gradient(90deg, #ffcc00, #ffcc00 20px, transparent 20px, transparent 40px);
+        margin: 30px 0;
+        animation: moveLine 10s linear infinite;
+    }
+    
+    @keyframes moveLine {
+        0% { background-position: 0 0; }
+        100% { background-position: 100px 0; }
+    }
+    
+    /* Footer Styles */
+    .footer {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 40px;
+        text-align: center;
+        box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Home Button */
+    .home-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 999;
+    }
+    
+    .home-button button {
+        background: linear-gradient(to right, #1e3c72, #2a5298);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    
+    .home-button button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    }
+    
+    /* Road Animation */
+    .road-container {
+        height: 30px;
+        overflow: hidden;
+        position: relative;
+        margin: 10px 0 30px 0;
+    }
+    
+    .road {
+        height: 100%;
+        background-color: #333;
+        position: relative;
+    }
+    
+    .road-line {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 4px;
+        background: #ffcc00;
+        width: 30px;
+        animation: roadLine 2s linear infinite;
+    }
+    
+    @keyframes roadLine {
+        0% { transform: translateX(-100px) translateY(-50%); }
+        100% { transform: translateX(calc(100vw + 100px)) translateY(-50%); }
+    }
+    
+    .road-line:nth-child(1) { animation-delay: 0s; }
+    .road-line:nth-child(2) { animation-delay: 0.4s; }
+    .road-line:nth-child(3) { animation-delay: 0.8s; }
+    .road-line:nth-child(4) { animation-delay: 1.2s; }
+    .road-line:nth-child(5) { animation-delay: 1.6s; }
+    
+    /* stButton modifications */
+    .stButton > button {
+        display: none;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Set session state for page navigation
 if 'page' not in st.session_state:
@@ -166,39 +253,47 @@ if st.session_state.page != 'home':
     # Hidden button to trigger the action
     if st.button("Home", key="home-button-hidden", help="Return to homepage"):
         st.session_state.page = 'home'
-        
-# Add the background image based on the current page
-current_page = st.session_state.page
-if current_page in background_images:
-    page_bg = background_images[current_page]
-    add_bg_from_local(page_bg['path'], page_bg['overlay'])
 
 # Logic to navigate to different Python files
 if st.session_state.page == 'home':
-    # Title and subtitle displayed on the home page with animation
+    # Animated road at the top
     st.markdown(
         """
-        <div class="title-container">
-            <h1 style='color: #333; text-align: center; margin-bottom: 10px;'>RouteVision AI</h1>
-            <h3 style='color: #555; text-align: center; font-weight: normal;'>Advanced Traffic Monitoring & Optimization Platform</h3>
+        <div class="road-container">
+            <div class="road">
+                <div class="road-line"></div>
+                <div class="road-line"></div>
+                <div class="road-line"></div>
+                <div class="road-line"></div>
+                <div class="road-line"></div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True
     )
     
-    # Add space above buttons
-    st.markdown("<br>", unsafe_allow_html=True)
+    # Header with traffic-themed design
+    st.markdown(
+        """
+        <div class="main-header">
+            <h1 class="header-title">RouteVision AI</h1>
+            <h3 class="header-subtitle">Advanced Traffic Monitoring & Optimization Platform</h3>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     
-    # Create horizontal layout with enhanced buttons
+    # Create horizontal layout with enhanced cards
     col1, col2, col3 = st.columns(3)
     
     with col1:
         st.markdown(
             """
-            <div class="button-container">
-                <div class="button-icon">🎥</div>
-                <div class="button-title">Traffic Feed</div>
-                <div class="button-description">View real-time traffic cameras and AI-powered analytics</div>
+            <div class="feature-card">
+                <div class="feature-icon">🎥</div>
+                <div class="feature-title">Traffic Feed</div>
+                <div class="feature-description">View real-time traffic cameras with AI-powered analytics. Monitor congestion, incidents, and traffic flow across your network.</div>
+                <button class="custom-button" onclick="document.getElementById('traffic_btn').click()">EXPLORE FEED</button>
             </div>
             """,
             unsafe_allow_html=True
@@ -209,10 +304,11 @@ if st.session_state.page == 'home':
     with col2:
         st.markdown(
             """
-            <div class="button-container">
-                <div class="button-icon">🗺️</div>
-                <div class="button-title">Route Optimizer</div>
-                <div class="button-description">Find the fastest routes with AI predictive analysis</div>
+            <div class="feature-card">
+                <div class="feature-icon">🗺️</div>
+                <div class="feature-title">Route Optimizer</div>
+                <div class="feature-description">Find the fastest routes with AI predictive analysis. Avoid congestion and reduce travel time with real-time traffic insights.</div>
+                <button class="custom-button" onclick="document.getElementById('route_btn').click()">OPTIMIZE ROUTES</button>
             </div>
             """,
             unsafe_allow_html=True
@@ -223,10 +319,11 @@ if st.session_state.page == 'home':
     with col3:
         st.markdown(
             """
-            <div class="button-container">
-                <div class="button-icon">🚦</div>
-                <div class="button-title">Signal Simulation</div>
-                <div class="button-description">Smart traffic signal control and simulation</div>
+            <div class="feature-card">
+                <div class="feature-icon">🚦</div>
+                <div class="feature-title">Signal Simulation</div>
+                <div class="feature-description">Smart traffic signal control and simulation. Test signal timing strategies and optimize traffic flow with our AI-powered system.</div>
+                <button class="custom-button" onclick="document.getElementById('signal_btn').click()">RUN SIMULATION</button>
             </div>
             """,
             unsafe_allow_html=True
@@ -234,12 +331,33 @@ if st.session_state.page == 'home':
         if st.button("RUN SIMULATION", key="signal_btn"):
             st.session_state.page = 'smart_signal'
     
-    # Footer section
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    # Another road animation
     st.markdown(
         """
-        <div style='background-color: rgba(255, 255, 255, 0.7); padding: 15px; border-radius: 10px; position: fixed; bottom: 20px; width: calc(100% - 40px); text-align: center;'>
-            <p style='margin: 0; color: #666; font-size: 12px;'>© 2025 RouteVision AI - Transforming Urban Mobility Through Artificial Intelligence</p>
+        <div class="traffic-line"></div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Dashboard preview section (optional)
+    st.markdown(
+        """
+        <div style="text-align: center; margin: 40px 0 20px 0;">
+            <h2 style="color: #1e3c72; font-size: 28px; margin-bottom: 15px;">Making Cities Smarter</h2>
+            <p style="color: #555; max-width: 800px; margin: 0 auto; font-size: 16px; line-height: 1.6;">
+                RouteVision AI helps traffic managers, city planners, and commuters make better decisions through 
+                real-time data analysis and predictive modeling. Our platform reduces congestion, emissions, and travel times.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Footer section
+    st.markdown(
+        """
+        <div class="footer">
+            <p style="margin: 0; color: #666; font-size: 13px;">© 2025 RouteVision AI - Transforming Urban Mobility Through Artificial Intelligence</p>
         </div>
         """,
         unsafe_allow_html=True
