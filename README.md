@@ -1,7 +1,7 @@
 # 🚦 Smart Traffic Management System
 
 <div align="center">
-
+  
 ![Smart Traffic Management System](https://img.shields.io/badge/Version-1.0.0-blue?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.8+-green?style=for-the-badge&logo=python)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.25.0-red?style=for-the-badge&logo=streamlit)
