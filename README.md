@@ -1,4 +1,4 @@
-# 🚦 Smart Traffic Management System
+<h1 align="center">🚦 Smart Traffic Management System </h1>
 
 <div align="center">
   
